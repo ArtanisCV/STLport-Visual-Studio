@@ -111,11 +111,13 @@ echo    msvc7    Microsoft Visual C++ .NET 2002
 echo    msvc71   Microsoft Visual C++ .NET 2003
 echo    msvc8    Microsoft Visual C++ 2005
 echo    msvc9    Microsoft Visual C++ 2008
+echo    msvc11    Microsoft Visual C++ 2012
 echo    icl      Intel C++ Compiler
 echo    evc3     Microsoft eMbedded Visual C++ 3 (*)
 echo    evc4     Microsoft eMbedded Visual C++ .NET (*)
 echo    evc8     Microsoft Visual C++ 2005 compiling for CE
 echo    evc9     Microsoft Visual C++ 2008 compiling for CE
+echo    evc11    Microsoft Visual C++ 2012 compiling for CE
 echo.
 echo  (*) For these compilers the target processor is determined automatically.
 echo      You must run the WCE*.BAT file you wish to build STLport for before
@@ -203,12 +205,14 @@ if "%1" == "msvc71" goto oc_msv71
 if "%1" == "msvc7" goto oc_msvc7
 if "%1" == "msvc8" goto oc_msvc8
 if "%1" == "msvc9" goto oc_msvc9
+if "%1" == "msvc11" goto oc_msvc11
 if "%1" == "icl"   goto oc_icl
 
 if "%1" == "evc3" goto oc_evc3
 if "%1" == "evc4" goto oc_evc4
 if "%1" == "evc8" goto oc_evc8
 if "%1" == "evc9" goto oc_evc9
+if "%1" == "evc11" goto oc_evc11
 
 if "%1" == "watcom" goto oc_wtm
 
@@ -244,6 +248,12 @@ goto oc_msvc
 echo Setting compiler: Microsoft Visual C++ 2008
 echo COMPILER_NAME=vc9 >> build\Makefiles\nmake\config.mak
 set SELECTED_COMPILER_VERSION=90
+goto oc_msvc
+
+:oc_msvc11
+echo Setting compiler: Microsoft Visual C++ 2012
+echo COMPILER_NAME=vc11 >> build\Makefiles\nmake\config.mak
+set SELECTED_COMPILER_VERSION=110
 goto oc_msvc
 
 :oc_msvc
@@ -338,6 +348,31 @@ echo !include evc.mak > .\build\lib\Makefile
 echo !include evc.mak > .\build\test\unit\Makefile
 echo !include evc.mak > .\build\test\eh\Makefile
 goto proc
+
+:oc_evc11
+echo Setting compiler: Microsoft Visual C++ .NET 2012 for Windows CE
+echo COMPILER_NAME=evc11 >> build\Makefiles\nmake\config.mak
+set SELECTED_COMPILER_VERSION=110
+if "%OSVERSION%"=="" (
+    echo OSVERSION not set, assuming target is CE 5.0
+    echo CEVERSION=500 >> build\Makefiles\nmake\config.mak
+) else if "%OSVERSION%"=="WCE400" (
+    echo CEVERSION=400 >> build\Makefiles\nmake\config.mak
+) else if "%OSVERSION%"=="WCE420" (
+    echo CEVERSION=420 >> build\Makefiles\nmake\config.mak
+) else if "%OSVERSION%"=="WCE500" (
+    echo CEVERSION=500 >> build\Makefiles\nmake\config.mak
+) else (
+    echo Unknown value for OSVERSION.
+    exit /b 1
+)
+set PLATFORM_SPECIFIED=1
+set SELECTED_COMPILER=msvc
+echo !include evc.mak > .\build\lib\Makefile
+echo !include evc.mak > .\build\test\unit\Makefile
+echo !include evc.mak > .\build\test\eh\Makefile
+goto proc
+
 
 :oc_evc
 set PLATFORM_SPECIFIED=1

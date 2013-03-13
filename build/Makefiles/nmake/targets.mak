@@ -200,6 +200,10 @@ RES_MARKED=$(RES_MARKED:@=obj\vc8\@)
 OBJ_MARKED=$(OBJ_MARKED:@=obj\vc9\@)
 RES_MARKED=$(RES_MARKED:@=obj\vc9\@)
 
+!elseif "$(COMPILER_NAME)" == "vc11"
+OBJ_MARKED=$(OBJ_MARKED:@=obj\vc11\@)
+RES_MARKED=$(RES_MARKED:@=obj\vc11\@)
+
 !elseif "$(COMPILER_NAME)" == "icl"
 OBJ_MARKED=$(OBJ_MARKED:@=obj\icl\@)
 RES_MARKED=$(RES_MARKED:@=obj\icl\@)
@@ -218,5 +222,3 @@ OBJ_A_STLDBG=$(OBJ_MARKED:@=static-stlg\)
 RES=$(RES_MARKED:@=shared\)
 RES_DBG=$(RES_MARKED:@=shared-g\)
 RES_STLDBG=$(RES_MARKED:@=shared-stlg\)
-
-
